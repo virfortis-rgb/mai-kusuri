@@ -1,8 +1,9 @@
 class ChatsController < ApplicationController
 
   def create
-    @chat = Chat.new
+    @chat = Chat.find(params[:id])
     @chat.user = current_user
+    raise
     if @chat.save
       redirect_to chat_path(@chat)
     else
