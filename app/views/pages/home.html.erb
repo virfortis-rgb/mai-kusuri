@@ -1,6 +1,15 @@
 <h1>Pages#home</h1>
-<div>
+<div class="container">
   <%= simple_form_for @chat do |f| %>
     <%= f.submit %>
+  <% end %>
+</div>
+<div class="container">
+  <h3>My Chats</h3>
+  <p>TODO Add into sidebar, ask TA</p>
+  <% @chats.each do |chat| %>
+    <div class="card">
+      <%= link_to 'chat.title', chat_path(chat) %>
+    </div>
   <% end %>
 </div>

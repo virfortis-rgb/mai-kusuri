@@ -1,13 +1,12 @@
 class ChatsController < ApplicationController
 
   def create
-    @chat = Chat.find(params[:id])
+    @chat = Chat.new(params[:id])
     @chat.user = current_user
-    raise
     if @chat.save
       redirect_to chat_path(@chat)
     else
-      redirect_to root_path, flash: { notice: "Failed to save this chat!"}
+      redirect_to root_path, flash: { notice: "Failed to create a chat! Make sure you are logged in!"}
     end
   end
 
