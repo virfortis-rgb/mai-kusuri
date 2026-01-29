@@ -74,3 +74,12 @@ group :test do
 end
 
 gem "devise"
+
+group :development, :test do
+  gem 'faker'
+end
+
+gem 'faraday'
+gem 'json'
+# Gemfile
+gem 'dotenv-rails', groups: [:development, :test]
