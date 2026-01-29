@@ -1,5 +1,23 @@
-<div>
-  <p>
-    Drugs! Drugs! Grugs are wonderful!
-  </p>
+<h2><%= @chat.title %></h2>
+<div class="container">
+  <div class="container">
+    <% if @chat.messages === nil %>
+      <p>
+        You don't have any messages yet! Start chatting with mAiku to see some messages!
+      </p>
+    <% else %>
+      <% @chat.messages.each do |message| %>
+        <p>
+          <strong><%= message.role %></strong>
+          <%= @message.content %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="container">
+    <%= simple_form_for [@chat, @message] do |f| %>
+      <%= f.input :content, label: "Ask me something?", required: true, placeholder: "What is the best drug for me?" %>
+      <%= f.button :submit, "Ask mAIku", class: "btn btn-primary" %>
+    <% end %>
+  </div>
 </div>
