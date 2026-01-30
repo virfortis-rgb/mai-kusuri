@@ -80,7 +80,3 @@ gem "ruby_llm", "~> 1.2.0"
 
 gem 'faraday'
 gem 'json'
-
-group :development, :test do
-  gem 'faker'
-end
