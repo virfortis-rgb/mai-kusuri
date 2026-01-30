@@ -75,11 +75,12 @@ end
 
 gem "devise"
 
-group :development, :test do
-  gem 'faker'
-end
+
+gem "ruby_llm", "~> 1.2.0"
 
 gem 'faraday'
 gem 'json'
-# Gemfile
-gem 'dotenv-rails', groups: [:development, :test]
+
+group :development, :test do
+  gem 'faker'
+end
