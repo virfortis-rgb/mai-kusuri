@@ -2,6 +2,7 @@ class ChatsController < ApplicationController
 
   def create
     @chat = Chat.new(params[:id])
+    @chat.title = Chat::DEFAULT_TITLE
     @chat.user = current_user
     if @chat.save
       redirect_to chat_path(@chat)
