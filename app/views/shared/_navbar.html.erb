@@ -1,22 +1,19 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
   <div class="container-fluid d-flex justify-content-between align-items-center">
-
     <div class="navbar-brand-container" style="flex: 1;">
       <%= link_to root_path, class: "navbar-brand" do %>
         <i class="bi bi-list" style="font-size: 1.5rem; color: #333;"></i>
       <% end %>
     </div>
-
     <div class="navbar-center-links d-flex justify-content-center" style="flex: 1;">
       <ul class="navbar-nav">
         <% if user_signed_in? %>
           <li class="nav-item active">
-            <%= link_to "Home", root_path, class: "nav-link fw-bold" %>
+            <%= link_to "Home", chats_path, class: "nav-link fw-bold" %>
           </li>
         <% end %>
       </ul>
     </div>
-
     <div class="navbar-right-container d-flex justify-content-end" style="flex: 1;">
       <ul class="navbar-nav">
         <% if user_signed_in? %>
@@ -37,6 +34,5 @@
         <% end %>
       </ul>
     </div>
-
   </div>
 </nav>

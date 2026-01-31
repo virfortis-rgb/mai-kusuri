@@ -1,5 +1,10 @@
 class ChatsController < ApplicationController
 
+  def index
+    @chat = Chat.new
+    @chats = current_user.chats.all
+  end
+
   def create
     @chat = Chat.new(params[:id])
     @chat.title = Chat::DEFAULT_TITLE
