@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
   SYSTEM_PROMPT = "You are a pharmacist in a Japanese drugstore. You are an English speaker.
                   I am an English speaking tourist travelling in Japan. I'm sick and looking for OTC medication.
                   Find me a Japanese OTC medication for my symptoms.
-                  Provide 3 OTC suggested medications, using markdown."
+                  Provide OTC medications, using markdown."
 
   def create
     @chat = current_user.chats.find(params[:chat_id])
@@ -18,6 +18,7 @@ class MessagesController < ApplicationController
         content: response.content,
         chat: @chat
       )
+      @chat.generate_title_from_first_message
       redirect_to chat_path(@chat)
     else
       render "chats/show", status: :unprocessable_entity
