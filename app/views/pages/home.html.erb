@@ -1,41 +1,4 @@
-<div class="container m-5">
-  <%= simple_form_for @chat do |f| %>
-    <%= f.submit "Start New Chat", class: "btn btn-primary" %>
-  <% end %>
-</div>
-
 <div class="container">
-  <div class="cards mb-5">
-    <%= link_to "#", class: "card-link" do %>
-      <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))">
-        Find Me Drugs
-      </div>
-    <% end %>
-
-    <%= link_to "#", class: "card-link" do %>
-      <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))">
-        Find Me A Clinic
-      </div>
-    <% end %>
-
-    <%= link_to "#", class: "card-link" do %>
-      <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))">
-        Emergency
-      </div>
-    <% end %>
-  </div>
-
-  <hr>
-
-  <h3>My Chats</h3>
-  <p class="text-muted">TODO Add into sidebar, ask TA</p>
-
-  <ul class="list-unstyled">
-    <% @chats.each do |chat| %>
-      <li class="list-item">
-        <%# Note: Removed quotes from 'chat.title' so it shows the actual chat title variable %>
-        <%= link_to chat.title, chat_path(chat), class: "btn btn-outline-secondary my-1 w-100 text-start" %>
-      </li>
-    <% end %>
-  </ul>
+  <h1>This is a Landing Page</h1>
+  <%= link_to "Start talking with our Mai-Kun", chats_path, class: "btn btn-secondary" %>
 </div>

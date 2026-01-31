@@ -1,53 +1,81 @@
-// Specific CSS for your home-page
-// Combined Typography
+// 1. Typography
 h1, h2, h3, h4, h5, h6, p {
   color: $strong-purple;
 }
 
+// 2. The Card Component (Base Styles)
 .card-category {
   height: 180px;
+  padding: 24px;
   display: flex;
+  flex-direction: column; // Always stack icon on top of text
   justify-content: center;
   align-items: center;
+  gap: 12px;              // Space between icon and text
+
+  text-align: center;
   background-size: cover;
   background-position: center;
   color: white;
-  font-size: 24px;
-  font-weight: bold;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 40px;      // Icon size
+  }
+
+  span {
+    font-size: 24px;
+    font-weight: bold;
+  }
 }
 
+// 3. The Grid Container
 .cards {
   display: grid;
   grid-gap: 16px;
+  grid-template-columns: 1fr; // Mobile First
+  margin-top: 40px;           // Space from Navbar
 
-  // Start with 1 column (Mobile)
-  grid-template-columns: 1fr;
-
-  // Tablet: 2 columns
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  // Desktop: 3 columns
   @media (min-width: 992px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  form {
+    width: 100%;
+    margin: 0;
   }
 }
 
-.card-link {
-  text-decoration: none; // Removes the blue underline from the link
-  display: block;        // Makes the link behave like a container
+// 4. Interaction Wrappers
+.card-link,
+.card-submit-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  font-family: inherit;
 
   &:hover {
-    text-decoration: none; // Keeps it clean on hover
+    text-decoration: none;
+
     .card-category {
-      // This adds a subtle "pop" when you hover over the link
-      transform: scale(1.02);
-      transition: transform 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  &:active .card-category {
+    transform: translateY(0) scale(1);
   }
 }
