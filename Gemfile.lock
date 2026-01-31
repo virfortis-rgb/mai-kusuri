@@ -376,9 +376,11 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  faraday
   font-awesome-sass (~> 6.1)
   importmap-rails
   jbuilder
+  json
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.1.6)
