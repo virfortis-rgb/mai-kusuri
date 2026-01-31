@@ -1,9 +1,9 @@
-// Specific CSS for your home-page
-// Combined Typography
+// 1. Typography
 h1, h2, h3, h4, h5, h6, p {
   color: $strong-purple;
 }
 
+// 2. The Card Component (Base Styles)
 .card-category {
   height: 180px;
   display: flex;
@@ -17,37 +17,52 @@ h1, h2, h3, h4, h5, h6, p {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease; // Smooth transition for both hover states
 }
 
+// 3. The Grid Container
 .cards {
   display: grid;
   grid-gap: 16px;
+  grid-template-columns: 1fr; // Mobile First
 
-  // Start with 1 column (Mobile)
-  grid-template-columns: 1fr;
-
-  // Tablet: 2 columns
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  // Desktop: 3 columns
   @media (min-width: 992px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Handle forms being direct children of the grid
+  form {
+    width: 100%;
   }
 }
 
-.card-link {
-  text-decoration: none; // Removes the blue underline from the link
-  display: block;        // Makes the link behave like a container
+// 4. Interaction Wrappers (Links and Buttons)
+.card-link,
+.card-submit-btn {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
 
   &:hover {
-    text-decoration: none; // Keeps it clean on hover
+    text-decoration: none;
+
     .card-category {
-      // This adds a subtle "pop" when you hover over the link
-      transform: scale(1.02);
-      transition: transform 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
+  }
+
+  &:active .card-category {
+    transform: translateY(0) scale(1);
   }
 }
