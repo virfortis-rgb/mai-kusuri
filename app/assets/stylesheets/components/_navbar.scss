@@ -1,12 +1,28 @@
+// app/assets/stylesheets/components/_navbar.scss
+
 .navbar-lewagon {
-  justify-content: space-between;
-  background: white;
-}
+  background: $purple-grey;
+  border-bottom: 1px solid $beige;
+  padding: 10px 0;
+  .navbar-brand-container,
+  .navbar-center-links,
+  .navbar-right-container {
+    flex: 1; // Ensures perfect centering
+  }
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
-}
+  .bi-list, .bi-person-circle {
+    color: $strong-purple;
+    transition: opacity 0.2s ease;
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  .nav-link {
+    &.active {
+      color: $strong-purple !important;
+      font-weight: bold;
+    }
+  }
 }
