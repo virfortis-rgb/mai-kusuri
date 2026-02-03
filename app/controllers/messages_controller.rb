@@ -21,6 +21,7 @@ class MessagesController < ApplicationController
         chat: @chat
       )
       @chat.generate_title_from_first_message
+      @chat.generate_symptom
 
       redirect_to chat_path(@chat)
     else

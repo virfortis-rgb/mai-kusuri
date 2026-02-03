@@ -5,7 +5,8 @@ class Chat < ApplicationRecord
   # validates if the chatbot sent an initial message
 
   DEFAULT_TITLE = ""
-  TITLE_PROMPT = "Generate a short, descriptive, 3-to-6 word title that summarizes the user question for a chat conversation."
+  TITLE_PROMPT = "Generate a short, descriptive, 3-to-6 word description that summarizes the user's question."
+  SYMPTOM = "generate a comma separated list of key words that the desscribe the user's symptoms."
 
   def generate_title_from_first_message
     return unless title == DEFAULT_TITLE
@@ -15,5 +16,13 @@ class Chat < ApplicationRecord
 
     response = RubyLLM.chat(provider: :openai, assume_model_exists: true).with_instructions(TITLE_PROMPT).ask(first_user_message.content)
     update(title: response.content)
+  end
+
+  def generate_symptom
+    first_user_message = messages.where(role: "user").order(:created_at).first
+    return if first_user_message.nil?
+
+    response = RubyLLM.chat(provider: :openai, assume_model_exists: true).with_instructions(SYMPTOM).ask(first_user_message.content)
+    update(symptom: response.content)
   end
 end
