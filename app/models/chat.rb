@@ -4,7 +4,7 @@ class Chat < ApplicationRecord
 
   # validates if the chatbot sent an initial message
 
-  DEFAULT_TITLE = "Untitled"
+  DEFAULT_TITLE = ""
   TITLE_PROMPT = "Generate a short, descriptive, 3-to-6 word title that summarizes the user question for a chat conversation."
 
   def generate_title_from_first_message
