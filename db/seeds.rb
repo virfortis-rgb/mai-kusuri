@@ -3,8 +3,8 @@ require 'json'
 
 # --- 1. Configuration ---
 APP_ID   = ENV.fetch('RAKUTEN_APP_ID')
-GENRE_ID = "201541" # Genre ID for "Pharmaceuticals/Drugs"
-TOTAL_COUNT = 300
+GENRE_ID = "564537" # Genre ID for "Pharmaceuticals/Drugs"
+TOTAL_COUNT = 1000
 HITS_PER_PAGE = 30
 TOTAL_PAGES = TOTAL_COUNT / HITS_PER_PAGE
 
@@ -22,6 +22,20 @@ def fetch_drugs(page_number)
     req.params['sort']          = '-reviewCount' # Sort by most popular/reviewed
   end
 
+  def extract_ingredients(caption)
+  return nil if caption.nil? || caption.empty?
+  pattern = /(?:【|\[|<)(?:成分|分量|原材料).*?(?:】|\]|>)(.*?)(?=(?:【|\[|<)|$)/m
+  match = caption.match(pattern)
+    if match
+      clean_text = match[1].gsub(/<.*?>/, " ").strip
+      return clean_text
+    else
+      return nil
+    end
+  end
+
+
+
   if response.status == 200
     data = JSON.parse(response.body)
     return data['Items'].map { |i| i['Item'] }
@@ -32,18 +46,15 @@ def fetch_drugs(page_number)
 end
 
 # --- 3. Clean Database ---
-puts " Cleaning database..."
-Suggestion.destroy_all
-Message.destroy_all
-Chat.destroy_all
+puts " 🧹Cleaning database..."
 Drug.destroy_all
-User.destroy_all
+
 
 # --- 4. Fetch and Create Drug Records ---
-puts ":rocket: Starting to fetch #{TOTAL_COUNT} drugs from Rakuten API..."
+puts "🚀 Starting to fetch #{TOTAL_COUNT} drugs from Rakuten API..."
 
 (1..TOTAL_PAGES).each do |page|
-  puts ":satellite_antenna: Fetching page #{page}..."
+  puts "📡: Fetching page #{page}..."
   items = fetch_drugs(page)
 
   items.each do |item|
@@ -64,25 +75,27 @@ puts ":rocket: Starting to fetch #{TOTAL_COUNT} drugs from Rakuten API..."
 
     # --- Ingredient Extraction ---
     # Currently saving the full caption. We can refine this later with Regex or LLM.
-    ingredients_text = item['itemCaption']
+    raw_caption = item['itemCaption']
+    extracted_text = extract_ingredients(raw_caption)
+    if extracted_text.nil? || extracted_text.empty?
+      ingredients_text = "Ingredients not specified."
+    else
+      ingredients_text = extracted_text
+    end
 
     unless Drug.exists?(name: short_name)
       Drug.create!(
         name: short_name,
-        description: item['itemCaption'],
+        description: raw_caption,
         ingredients: ingredients_text,
-        image_url: image_url # Ensure your Drug model has this column
-      )
+        image_url: image_url)
+      end
     end
-  end
 
-  puts ":white_check_mark: Page #{page} processed. Total drugs in DB: #{Drug.count}"
+  puts "✅: Page #{page} processed. Total drugs in DB: #{Drug.count}"
 
   # Respect API rate limits (QPS)
   sleep(0.5)
 end
 
-puts ":tada: Seed finished successfully! Total drugs created: #{Drug.count}"
-
-# --- 5. Create Demo User & Conversation ---
-# (Keep your existing logic for User and Chat here)
+puts "🎉: Seed finished successfully! Total drugs created: #{Drug.count}"
