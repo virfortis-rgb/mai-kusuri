@@ -11,7 +11,7 @@ class MessagesController < ApplicationController
     @message.role = "user"
 
     if @message.save
-      ruby_llm_chat = RubyLLM.chat
+      ruby_llm_chat = RubyLLM.chat(provider: :openai, assume_model_exists: true)
       response = ruby_llm_chat.with_instructions(SYSTEM_PROMPT).ask(@message.content)
       Message.create(
         role: 'assistant',
