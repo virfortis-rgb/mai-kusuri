@@ -19,10 +19,10 @@ class Chat < ApplicationRecord
   end
 
   def generate_symptom
-    first_user_message = messages.where(role: "user").order(:created_at).first
-    return if first_user_message.nil?
+    first_assistant_message = messages.where(role: "assistant").order(:created_at).first
+    return if first_assistant_message.nil?
 
-    response = RubyLLM.chat(provider: :openai, assume_model_exists: true).with_instructions(SYMPTOM).ask(first_user_message.content)
+    response = RubyLLM.chat(provider: :openai, assume_model_exists: true).with_instructions(SYMPTOM).ask(first_assistant_message.content)
     update(symptom: response.content)
   end
 end

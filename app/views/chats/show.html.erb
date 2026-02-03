@@ -13,7 +13,7 @@
       <% @chat.messages.each do |message| %>
         <% if message.role == "user" %>
           <div class="d-flex justify-content-end mb-2">
-            <div class="bg-white px-3 py-2 rounded-4 chat-bubble-content shadow-sm">
+            <div class="bg-white px-3 pt-2 rounded-4 chat-bubble-content shadow-sm">
               <%= raw(render_markdown(message.content)) %>
             </div>
           </div>
@@ -21,6 +21,12 @@
           <div class="d-flex justify-content-start mb-4">
             <div class="bg-light px-3 py-2 rounded-4 chat-bubble-content shadow-sm">
               <%= raw(render_markdown(message.content))%>
+              <p>
+                Symptoms: <em><%= @chat.symptom %></em>
+              </p>
+              <p>
+                Drugs: TODO
+              </p>
             </div>
           </div>
         <% end %>
