@@ -2,90 +2,87 @@ require 'faraday'
 require 'json'
 
 # --- 1. Configuration ---
-APP_ID = ENV.fetch('RAKUTEN_APP_ID')
-GENRE_ID = "201541" # Here is also a question:this is the genre ID for "医薬品、医薬部外品",but a lot of items are not drugs in this genre.
-# ,so we may need to find a better api or filter them later.
-# --- 2. Search Function ---
-def fetch_top_selling_drugs
+APP_ID   = ENV.fetch('RAKUTEN_APP_ID')
+GENRE_ID = "201541" # Genre ID for "Pharmaceuticals/Drugs"
+TOTAL_COUNT = 300
+HITS_PER_PAGE = 30
+TOTAL_PAGES = TOTAL_COUNT / HITS_PER_PAGE
+
+# --- 2. Data Fetching Function ---
+def fetch_drugs(page_number)
   url = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706"
   conn = Faraday.new(url: url)
 
   response = conn.get do |req|
     req.params['applicationId'] = APP_ID
     req.params['genreId']       = GENRE_ID
-    # No specific keyword -> Fetch all in genre
     req.params['format']        = 'json'
-    req.params['hits']          = 30             # There is a limit of 30 records per fetch.
-    req.params['sort']          = '-reviewCount' # Sort by popularity (Review Count High to Low)
+    req.params['hits']          = HITS_PER_PAGE
+    req.params['page']          = page_number
+    req.params['sort']          = '-reviewCount' # Sort by most popular/reviewed
   end
 
-  unless response.status == 200
-    puts "⚠️ API Request Failed. Status: #{response.status}"
+  if response.status == 200
+    data = JSON.parse(response.body)
+    return data['Items'].map { |i| i['Item'] }
+  else
+    puts " Request failed for page #{page_number}. Status: #{response.status}"
     return []
   end
-
-  data = JSON.parse(response.body)
-  return data['Items'].map { |i| i['Item'] }
 end
 
 # --- 3. Clean Database ---
-puts "🧹 Cleaning database..."
+puts " Cleaning database..."
 Suggestion.destroy_all
 Message.destroy_all
 Chat.destroy_all
 Drug.destroy_all
 User.destroy_all
 
-# --- 4. Fetch & Create Drugs ---
-puts "🚀 Fetching Top 30 Best-Selling Drugs from Rakuten..."
+# --- 4. Fetch and Create Drug Records ---
+puts ":rocket: Starting to fetch #{TOTAL_COUNT} drugs from Rakuten API..."
 
-items = fetch_top_selling_drugs
+(1..TOTAL_PAGES).each do |page|
+  puts ":satellite_antenna: Fetching page #{page}..."
+  items = fetch_drugs(page)
 
-if items.empty?
-  puts "❌ No items found! Check API connection."
-  exit
+  items.each do |item|
+    # --- Data Cleaning ---
+    raw_name = item['itemName']
+    # Remove tags like 【Type 2 Drug】 and content inside parentheses
+    clean_name = raw_name.gsub(/【.*?】/, "").gsub(/（.*?）/, "").strip
+    # Take the first two words to get a concise brand/product name
+    short_name = clean_name.split(/[\s　]/).first(2).join(" ")
+
+    # --- Image Processing ---
+    # Rakuten returns an array of images; we take the first one.
+    # Hack: Replace the thumbnail size (128x128) with a higher resolution (300x300).
+    image_url = ""
+    if item['mediumImageUrls'] && item['mediumImageUrls'].any?
+      image_url = item['mediumImageUrls'][0]['imageUrl'].gsub(/(\?_ex=)\d+x\d+/, '\1300x300')
+    end
+
+    # --- Ingredient Extraction ---
+    # Currently saving the full caption. We can refine this later with Regex or LLM.
+    ingredients_text = item['itemCaption']
+
+    unless Drug.exists?(name: short_name)
+      Drug.create!(
+        name: short_name,
+        description: item['itemCaption'],
+        ingredients: ingredients_text,
+        image_url: image_url # Ensure your Drug model has this column
+      )
+    end
+  end
+
+  puts ":white_check_mark: Page #{page} processed. Total drugs in DB: #{Drug.count}"
+
+  # Respect API rate limits (QPS)
+  sleep(0.5)
 end
 
-items.each do |item|
-  # Avoid duplicates just in case
-  next if Drug.exists?(name: item['itemName'])
+puts ":tada: Seed finished successfully! Total drugs created: #{Drug.count}"
 
-  Drug.create!(
-    name: item['itemName'],
-    description: item['itemCaption'],
-    ingredients: item['itemCaption'] # TODO：to find other api for ingredients
-  )
-end
-
-puts "✅ Successfully created #{Drug.count} drugs."
-
-
-# --- 5. Create Demo User ---
-puts "👤 Creating test user..."
-test_user = User.create!(
-  email: "test@test.com",
-  password: "123456"
-)
-puts "User created: test@test.com / 123456"
-
-
-# --- 6. Generate Demo Conversation ---
-puts "💬 Generating demo conversation..."
-
-chat_stomach = Chat.create!(user: test_user)
-Message.create!(chat: chat_stomach, role: "user", content: "I have a stomachache.")
-ai_message_gi = Message.create!(chat: chat_stomach, role: "ai", content: "I recommend ビオフェルミン.")
-
-# --- 7. Link Suggestions (Smart Fallback) ---
-puts "🔗 Linking drugs to messages..."
-# Try to find Biofermin or Stomach medicine
-gi_drug = Drug.where("name LIKE ?", "%ビオフェルミン%").first
-# Fallback
-gi_drug ||= Drug.last
-
-if gi_drug
-  Suggestion.create!(message_id: ai_message_gi.id, drug_id: gi_drug.id)
-  puts "✅ Linked Stomach Chat to: #{gi_drug.name}"
-end
-
-puts "🎉 Seed finished successfully!"
+# --- 5. Create Demo User & Conversation ---
+# (Keep your existing logic for User and Chat here)
