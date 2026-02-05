@@ -1,0 +1,24 @@
+<div class="container mt-5" data-controller="clinic-locator">
+  <h2 class="mb-3">Find Me A Clinic</h2>
+  <p class="text-muted" data-clinic-locator-target="status">
+    Type a city or area (example: Tokyo or Saitama). Add symptoms to narrow results.
+  </p>
+
+  <form class="d-grid gap-2 d-md-flex mb-3" data-action="submit->clinic-locator#search">
+    <input
+      type="text"
+      class="form-control"
+      data-clinic-locator-target="query"
+      placeholder="Enter city or area (example: Tokyo)"
+      aria-label="Enter city or area" />
+    <input
+      type="text"
+      class="form-control"
+      data-clinic-locator-target="symptoms"
+      placeholder="Symptoms (example: fever, cough)"
+      aria-label="Enter symptoms" />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <ul class="list-unstyled" data-clinic-locator-target="list"></ul>
+</div>

@@ -13,7 +13,7 @@
       <% @chat.messages.each do |message| %>
         <% if message.role == "user" %>
           <div class="d-flex justify-content-end mb-2">
-            <div class="bg-white px-3 py-2 rounded-4 chat-bubble-content shadow-sm">
+            <div class="bg-white px-3 pt-2 rounded-4 chat-bubble-content shadow-sm">
               <%= raw(render_markdown(message.content)) %>
             </div>
           </div>
@@ -21,6 +21,12 @@
           <div class="d-flex justify-content-start mb-4">
             <div class="bg-light px-3 py-2 rounded-4 chat-bubble-content shadow-sm">
               <%= raw(render_markdown(message.content))%>
+              <p>
+                Symptoms: <em><%= @chat.symptom %></em>
+              </p>
+              <p>
+                Drugs: TODO # if else for display drugs
+              </p>
             </div>
           </div>
         <% end %>
@@ -30,7 +36,7 @@
   <div class="container sticky-bottom bg-light p-3">
     <%= simple_form_for [@chat, @message] do |f| %>
       <%= f.input :content, label: "Ask me something?", required: true, placeholder: "What is the best drug for me?" %>
-      <%= f.button :submit, "Ask mAIku", class: "btn btn-secondary" %>
+      <%= f.button :submit, "Ask Mai-kun", class: "btn btn-secondary" %>
     <% end %>
   </div>
 </div>

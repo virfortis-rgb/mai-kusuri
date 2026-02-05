@@ -8,7 +8,7 @@
         </div>
       </button>
     <% end %>
-    <%= link_to "#", class: "card-link" do %>
+    <%= link_to clinics_path, class: "card-link", aria: { label: "Find a clinic near me" } do %>
       <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))">
         <i class="bi bi-map"></i>
         <span> Find Me A Clinic</span>
