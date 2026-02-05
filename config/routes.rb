@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get "clinics", to: "clinics#index"
   get "clinics/search", to: "clinics#search"
 
+  get "emergency", to: "emergency#index", as: :emergency
+
   resources :chats, only: [:index, :create, :show] do
     resources :messages, only: [:create]
   end
