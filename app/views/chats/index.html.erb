@@ -14,7 +14,7 @@
         <span> Find Me A Clinic</span>
       </div>
     <% end %>
-    <%= link_to "#", class: "card-link" do %>
+    <%= link_to emergency_path, class: "card-link", aria: { label: "Emergency information" } do %>
       <div class="card-category" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))">
         <i class="bi bi-exclamation-triangle"></i>
         <span>Emergency</span>
@@ -23,7 +23,6 @@
   </div>
   <hr>
   <h3>My Chats</h3>
-  <p class="text-muted">TODO Add into sidebar, ask TA</p>
   <ul class="list-unstyled">
     <% @chats.each do |chat| %>
       <li class="list-item">
@@ -33,3 +32,14 @@
     <% end %>
   </ul>
 </div>
+<!-- Footer -->
+
+<footer class="bg-body-tertiary fixed-bottom text-center">
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+    © 2020 Copyright:
+    <a class="text-body" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+  </div>
+  <!-- Copyright -->
+</footer>

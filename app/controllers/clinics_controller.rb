@@ -7,6 +7,8 @@ class ClinicsController < ApplicationController
 
   def search
     query = params[:query].to_s.strip
+    # chats = current_user.chats   or chat?
+    # @symptoms = chats.each { |c| p c.symptom}
     symptoms = params[:symptoms].to_s.strip
     search_type = params[:type].to_s.strip.downcase
     if query.blank?
