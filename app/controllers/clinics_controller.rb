@@ -7,6 +7,8 @@ class ClinicsController < ApplicationController
 
   def search
     query = params[:query].to_s.strip
+    # chats = current_user.chats   or chat?
+    # @symptoms = chats.each { |c| p c.symptom}
     symptoms = params[:symptoms].to_s.strip
     if query.blank?
       render json: { error: "Please provide a city or area." }, status: :bad_request
