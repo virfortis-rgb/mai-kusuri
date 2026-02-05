@@ -1,6 +1,6 @@
 class Message < ApplicationRecord
-  has_many :suggestions
   belongs_to :chat
+  has_many :suggestions
   has_many :drugs, through: :suggestions
 
   # validates :role, presence: :true # scope { must be either chatbot or user}
