@@ -10,29 +10,47 @@ class ClinicsController < ApplicationController
     # chats = current_user.chats   or chat?
     # @symptoms = chats.each { |c| p c.symptom}
     symptoms = params[:symptoms].to_s.strip
+    search_type = params[:type].to_s.strip.downcase
     if query.blank?
       render json: { error: "Please provide a city or area." }, status: :bad_request
       return
     end
 
-    base = build_query_base(symptoms)
+    if params[:chat_id].present?
+      chat = current_user.chats.find_by(id: params[:chat_id])
+      unless chat
+        render json: { error: "Chat not found." }, status: :not_found
+        return
+      end
+
+      chat.generate_symptom_from_conversation if chat.respond_to?(:generate_symptom_from_conversation)
+      symptoms = normalize_symptoms(chat.symptom)
+    end
+
+    base_term = search_type == "drugstore" ? "drugstore" : "clinic"
+    base = build_query_base(symptoms, base_term)
     data = nominatim_search("#{base} in #{query}", "#{base} #{query}")
 
     if data.empty? && symptoms.present?
-      data = nominatim_search("clinic in #{query}", "clinic #{query}")
+      data = nominatim_search("#{base_term} in #{query}", "#{base_term} #{query}")
+    end
+
+    if data.length < 3
+      fallback_term = base_term == "drugstore" ? "pharmacy" : "hospital"
+      data = merge_results(data, fetch_nominatim("#{fallback_term} in #{query}"))
     end
 
     clinics = data.map do |place|
       name = place["display_name"]&.split(",")&.first
       address = place["display_name"]
       website = place.dig("extratags", "website") || place.dig("extratags", "contact:website")
-      query = CGI.escape([name, address].compact.join(" "))
+      query_string = CGI.escape([name, address].compact.join(" "))
 
       {
         name: name || "Clinic",
         address: address,
         website_url: website,
-        maps_url: "https://www.openstreetmap.org/?mlat=#{place['lat']}&mlon=#{place['lon']}#map=16/#{place['lat']}/#{place['lon']}"
+        maps_url: "https://www.google.com/maps/search/?api=1&query=#{query_string}"
       }
     end
 
@@ -50,13 +68,13 @@ class ClinicsController < ApplicationController
     fetch_nominatim(fallback_query)
   end
 
-  def build_query_base(symptoms)
-    return "clinic" if symptoms.blank?
+  def build_query_base(symptoms, base_term)
+    return base_term if symptoms.blank?
 
     keywords = symptom_keywords(symptoms)
-    return "clinic" if keywords.empty?
+    return base_term if keywords.empty?
 
-    "clinic #{keywords.join(' ')}"
+    "#{base_term} #{keywords.join(' ')}"
   end
 
   def symptom_keywords(symptoms)
@@ -85,7 +103,7 @@ class ClinicsController < ApplicationController
       format: "json",
       accept_language: "en",
       addressdetails: 1,
-      limit: 10,
+      limit: 20,
       extratags: 1
     }
     if (email = ENV["NOMINATIM_EMAIL"]).present?
@@ -107,5 +125,34 @@ class ClinicsController < ApplicationController
     end
 
     JSON.parse(response.body)
+  end
+
+  def merge_results(primary, secondary)
+    seen = {}
+    (primary + secondary).each_with_object([]) do |item, acc|
+      key = item["place_id"] || item["osm_id"] || item["display_name"]
+      next if seen[key]
+
+      seen[key] = true
+      acc << item
+    end
+  end
+
+  def normalize_symptoms(raw)
+    return "" if raw.blank?
+
+    begin
+      parsed = JSON.parse(raw)
+      case parsed
+      when Array
+        parsed.join(", ")
+      when Hash
+        parsed.values.join(", ")
+      else
+        raw.to_s
+      end
+    rescue JSON::ParserError
+      raw.to_s
+    end
   end
 end

@@ -1,24 +1,68 @@
 <div class="container mt-5" data-controller="clinic-locator">
   <h2 class="mb-3">Find Me A Clinic</h2>
   <p class="text-muted" data-clinic-locator-target="status">
-    Type a city or area (example: Tokyo or Saitama). Add symptoms to narrow results.
+    Type a city and select a context or enter symptoms.
   </p>
 
-  <form class="d-grid gap-2 d-md-flex mb-3" data-action="submit->clinic-locator#search">
-    <input
-      type="text"
-      class="form-control"
-      data-clinic-locator-target="query"
-      placeholder="Enter city or area (example: Tokyo)"
-      aria-label="Enter city or area" />
-    <input
-      type="text"
-      class="form-control"
-      data-clinic-locator-target="symptoms"
-      placeholder="Symptoms (example: fever, cough)"
-      aria-label="Enter symptoms" />
-    <button type="submit" class="btn btn-primary">Search</button>
+  <form class="mb-3" data-action="submit->clinic-locator#search">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input
+          type="text"
+          class="form-control"
+          data-clinic-locator-target="query"
+          placeholder="City (e.g. Tokyo)" />
+      </div>
+
+      <div class="col-md-4" data-clinic-locator-target="selectGroup">
+        <select class="form-select"
+                data-clinic-locator-target="chatSelect"
+                data-action="change->clinic-locator#checkInputType">
+          <option value="" selected>Select a past chat (Optional)</option>
+          <option value="manual_input_mode">✏️ Type symptoms manually...</option>
+          <option disabled>──────────────</option>
+          <% if @chats.present? %>
+            <% @chats.each do |chat| %>
+              <option value="<%= chat.id %>"><%= chat.title %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="col-md-4 d-none" data-clinic-locator-target="inputGroup">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            data-clinic-locator-target="manualInput"
+            placeholder="E.g., fever, headache" />
+          <button class="btn btn-outline-secondary" type="button" data-action="click->clinic-locator#resetToDropdown">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <select class="form-select" data-clinic-locator-target="chatId">
+          <option value="">Looking for...</option>
+          <option value="Clinic">🏥 Clinic</option>
+          <option value="Drugstore">💊 Drugstore</option>
+        </select>
+      </div>
+
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
   </form>
 
-  <ul class="list-unstyled" data-clinic-locator-target="list"></ul>
+  <div class="text-center d-none my-5" data-clinic-locator-target="loader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted mt-2">Searching nearby...</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 g-4 mt-2" data-clinic-locator-target="list">
+    </div>
 </div>
