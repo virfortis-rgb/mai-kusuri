@@ -1,22 +1,26 @@
-// app/assets/stylesheets/components/_navbar.scss
-
 .navbar-lewagon {
   background: $purple-grey;
   border-bottom: 1px solid $beige;
   padding: 10px 0;
+
   .navbar-brand-container,
   .navbar-center-links,
   .navbar-right-container {
-    flex: 1; // Ensures perfect centering
+    flex: 1;
   }
 
   .bi-list, .bi-person-circle {
     color: $strong-purple;
-    transition: opacity 0.2s ease;
+    transition: all 0.3s ease;
 
     &:hover {
       opacity: 0.7;
     }
+  }
+
+  .active-toggle {
+    color: $beige !important;
+    transform: rotate(90deg);
   }
 
   .nav-link {
@@ -25,4 +29,19 @@
       font-weight: bold;
     }
   }
+}
+.sidebar {
+  transition: all 0.3s ease-in-out;
+
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar.collapsed {
+  margin-left: -16.666667%;
+  opacity: 0;
+  pointer-events: none;
 }
