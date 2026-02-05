@@ -82,3 +82,6 @@ gem 'json'
 
 # render markdown
 gem 'kramdown'
+
+# RAG
+gem 'neighbor'

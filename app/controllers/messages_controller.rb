@@ -17,9 +17,12 @@ class MessagesController < ApplicationController
         role: 'assistant',
         content: response.content,
         chat: @chat
+        # find nearest drugs for
       )
+      # save the connection of message and drugs
       @chat.generate_title_from_first_message
       @chat.generate_symptom
+      # TODO: associate drug to this chat
 
       redirect_to chat_path(@chat)
     else
