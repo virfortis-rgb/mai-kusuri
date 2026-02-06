@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
 
     if @message.save
       ruby_llm_chat = RubyLLM.chat(provider: :openai, assume_model_exists: true)
-      message_embedding = ruby_llm_chat.embed(@message.content)
+      message_embedding = RubyLLM.embed(@message.content)
       @drugs = Drug.nearest_neighbors(:embedding, message_embedding.vectors, distance: "euclidean").first(3)
       instructions = system_prompt
       instructions += @drugs.map { |drug| drug_prompt(drug) }.join("\n\n")
@@ -16,7 +16,7 @@ class MessagesController < ApplicationController
       Message.create(
         role: 'assistant',
         content: response.content,
-        chat: @chat
+        chat: @chat,
         drugs: @drugs
       )
       @chat.generate_title_from_first_message
