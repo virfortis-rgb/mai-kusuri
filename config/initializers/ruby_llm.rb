@@ -5,4 +5,7 @@ RubyLLM.configure do |config|
   # config.default_model = "openai/gpt-oss-20b" # for groq
 
   # config.gemini_api_key = ENV.fetch("GEMINI_KEY")
+
+  # ollama
+  config.ollama_api_base = 'http://localhost:11434/v1'
 end
