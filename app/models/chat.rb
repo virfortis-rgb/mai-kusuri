@@ -5,8 +5,8 @@ class Chat < ApplicationRecord
   # validates if the chatbot sent an initial message
 
   DEFAULT_TITLE = ""
-  TITLE_PROMPT = "Generate a short, descriptive, 3-to-6 word description that summarizes the user's question."
-  SYMPTOM = "generate a comma separated list of key words that the desscribe the user's symptoms."
+  TITLE_PROMPT = "Generate a short, descriptive, 3-to-6 word description that summarizes the user's question in English."
+  SYMPTOM = "generate a comma separated list of key words that the desscribe the user's symptoms in English"
 
   def generate_title_from_first_message
     return unless title == DEFAULT_TITLE

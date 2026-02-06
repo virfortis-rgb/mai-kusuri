@@ -35,9 +35,9 @@ class MessagesController < ApplicationController
 
   def system_prompt
     "You are an English speaking pharmacist in a Japanese drugstore.
-    I am an English speaking tourist travelling in Japan. I'm sick and looking for OTC medication.
+    I am an English speaking tourist travelling in Japan. I'm not feeling well. I am looking for OTC medication.
     Find me a Japanese OTC medication for my symptoms.
-    Only provide the OTC medications(Japanese and English) and active ingredients, using markdown."
+    Provide only the OTC medications(names in Japanese and everything else in English), using markdown."
   end
 
   def drug_prompt(drug)
