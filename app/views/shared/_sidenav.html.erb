@@ -1,0 +1,25 @@
+<div class="sidenav-content pt-2">
+  <div class="chat-history-list px-3">
+    <h6 class="text-muted small text-uppercase fw-bold mb-3 border-bottom pb-2">
+      Chat History
+    </h6>
+
+    <% if challenges.any? %>
+      <div class="list-group list-group-flush">
+        <% challenges.each do |chat| %>
+          <%= link_to chat_path(chat), class: "list-group-item list-group-item-action border-0 rounded mb-1 d-flex align-items-center" do %>
+            <i class="bi bi-chat-left-dots me-2 text-muted"></i>
+            <span class="text-truncate" style="max-width: 150px;">
+              <%= chat.title.presence || "Untitled Chat" %>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="py-3 text-center">
+        <i class="bi bi-archive text-muted mb-2" style="font-size: 1.2rem;"></i>
+        <p class="text-muted small">No history yet.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
