@@ -1,6 +1,5 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
   <div class="container-fluid d-flex justify-content-between align-items-center">
-
     <%# 1. Left Section: Sidebar Toggle Icon %>
     <div class="navbar-brand-container" style="flex: 1;">
       <%= link_to "#", class: "navbar-brand",
@@ -10,22 +9,13 @@
            data-toggle-target="icon"></i>
       <% end %>
     </div>
-
-    <%# 2. Center Section: Navigation Links %>
-    <div class="navbar-center-links d-flex justify-content-center" style="flex: 1;">
-      <ul class="navbar-nav">
-        <% if user_signed_in? %>
-          <li class="nav-item active">
-            <%= link_to "Home", chats_path, class: "nav-link fw-bold" %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-
     <%# 3. Right Section: User Dropdown %>
     <div class="navbar-right-container d-flex justify-content-end" style="flex: 1;">
       <ul class="navbar-nav">
         <% if user_signed_in? %>
+          <li class="nav-item active d-flex align-items-center">
+            <%= link_to "Home", chats_path, class: "nav-link fw-bold" %>
+          </li>
           <li class="nav-item dropdown">
             <a href="#" class="nav-link" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
@@ -43,6 +33,5 @@
         <% end %>
       </ul>
     </div>
-
   </div>
 </nav>
