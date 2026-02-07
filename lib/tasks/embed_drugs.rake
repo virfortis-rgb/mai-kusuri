@@ -9,7 +9,7 @@ task embed_drugs: :environment do
       drug.update!(embedding: embedding.vectors)
       print "#{Drug.where.not(embedding: nil).count} out of #{drugs_count} embedded..." + "\r"
     end
-    puts "sleeping ..." + "\n"
+    puts "sleeping ..." + "\r"
     count = 0
     60.times do
       sleep(1)
