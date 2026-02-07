@@ -3,10 +3,9 @@
     <h6 class="text-muted small text-uppercase fw-bold mb-3 border-bottom pb-2">
       Chat History
     </h6>
-
-    <% if challenges.any? %>
+    <% if @chats.any? %>
       <div class="list-group list-group-flush">
-        <% challenges.each do |chat| %>
+        <% @chats.each do |chat| %>
           <%= link_to chat_path(chat), class: "list-group-item list-group-item-action border-0 rounded mb-1 d-flex align-items-center" do %>
             <i class="bi bi-chat-left-dots me-2 text-muted"></i>
             <span class="text-truncate" style="max-width: 150px;">

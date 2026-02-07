@@ -25,19 +25,11 @@
   <h3>My Chats</h3>
   <ul class="list-unstyled">
     <% @chats.each do |chat| %>
-      <li class="list-item">
-        <%# Note: Removed quotes from 'chat.title' so it shows the actual chat title variable %>
-        <%= link_to chat.title, chat_path(chat), class: "btn btn-outline-secondary my-1 w-100 text-start" %>
-      </li>
+      <% if chat.messages.present? %>
+        <li class="list-item">
+          <%= link_to chat.title, chat_path(chat), class: "btn btn-outline-secondary my-1 w-100 text-start" %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 </div>
-<!-- Footer -->
-<footer class="bg-body-tertiary text-center m-0 p-0">
-  <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-    © 2026
-    <a class="text-body" href="#">mAI Kusuri</a>
-  </div>
-  <!-- Copyright -->
-</footer>
