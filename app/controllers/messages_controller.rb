@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
 
     if @message.save
       ruby_llm_chat = RubyLLM.chat(provider: :openai, assume_model_exists: true)
-      message_embedding = RubyLLM.embed(@message.content)
+      message_embedding = RubyLLM.embed(@message.content, model: "gemini-embedding-001", dimensions: 1536)
       @drugs = Drug.nearest_neighbors(:embedding, message_embedding.vectors, distance: "euclidean").first(3)
       instructions = system_prompt
       instructions += @drugs.map { |drug| drug_prompt(drug) }.join("\n\n")

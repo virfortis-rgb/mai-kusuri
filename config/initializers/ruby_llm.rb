@@ -9,7 +9,4 @@ RubyLLM.configure do |config|
 
   # Gemini
   config.gemini_api_key = ENV.fetch("GEMINI_KEY")
-
-  # Ollama
-  config.ollama_api_base = 'http://localhost:11434/v1'
 end
