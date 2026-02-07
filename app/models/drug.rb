@@ -1,6 +1,5 @@
 class Drug < ApplicationRecord
   has_neighbors :embedding
-  after_create :set_embedding
 
   validates :name, presence: :true
   validates :ingredients, presence: :true
