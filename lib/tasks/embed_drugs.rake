@@ -11,9 +11,9 @@ task embed_drugs: :environment do
     end
     puts "sleeping ..." + "\n"
     count = 0
-    45.times do
+    60.times do
       sleep(1)
-      print (45 - count).to_s + "\r"
+      print (60 - count).to_s + "\r"
       count += 1
     end
   end
