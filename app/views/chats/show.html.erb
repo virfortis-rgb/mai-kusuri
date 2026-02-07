@@ -21,12 +21,17 @@
           <div class="d-flex justify-content-start mb-4">
             <div class="bg-light px-3 py-2 rounded-4 chat-bubble-content shadow-sm">
               <%= raw(render_markdown(message.content))%>
-              <p>
-                Symptoms: <em><%= @chat.symptom %></em>
-              </p>
-              <p>
-                Drugs: TODO # if else for display drugs
-              </p>
+              Some recommended drugs are:
+              <div class="container row gap-4">
+                <% message.drugs.each do |drug| %>
+                  <div class="card col align-items-center p-1 rounded-4" style="background-color: white;">
+                    <img src=<%= drug.image_url %> alt="image of the drug", style="background-color: white; width: 200px; height: 200px;">
+                    <div>
+                      <strong><%= drug.name %></strong>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
         <% end %>
